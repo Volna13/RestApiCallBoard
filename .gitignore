@@ -1,0 +1,5 @@
+./.prettierignore
+./.eslintignore
+./.eslintrc.js
+./.idea/
+./.prettier.config.js

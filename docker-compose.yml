@@ -1,0 +1,17 @@
+version: '3.3'
+
+services:
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpwd
+      MYSQL_DATABASE: restApiCallboard_db
+      MYSQL_USER: apiCB_user
+      MYSQL_PASSWORD: apicb_pwd
+
+volumes:
+  db_data: {}
