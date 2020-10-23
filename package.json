@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
+    "start-dev": "nodemon ./bin/www",
     "lint": "eslint ./",
     "lint-fix": "eslint --fix",
     "prettier": "prettier --write ./**/*.js"
@@ -22,6 +23,7 @@
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "^4.16.4",
+    "express-async-handler": "^1.1.4",
     "joi": "^17.2.1",
     "jsonwebtoken": "^8.5.1",
     "morgan": "~1.9.1",

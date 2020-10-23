@@ -1,9 +1,9 @@
 module.exports = {
-  HOST: "localhost",
-  USER: "apiCB_user",
-  PASSWORD: "apicb_pwd",
-  DB: "restApiCallboard_db",
-  dialect: "mysql",
+  HOST: 'localhost',
+  USER: 'apiCB_user',
+  PASSWORD: 'apicb_pwd',
+  DB: 'restApiCallboard_db',
+  dialect: 'mysql',
   pool: {
     max: 5,
     min: 0,

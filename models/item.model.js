@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
   const Item = sequelize.define(
-    "item",
+    'item',
     {
       id: {
         allowNull: false,
@@ -21,7 +21,7 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
       },
     },
-    { timestamps: true }
+    { timestamps: true },
   );
 
   return Item;

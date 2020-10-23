@@ -1,5 +1,5 @@
-const Sequelize = require("sequelize");
-const dbConfig = require("../config/db.config.js");
+const Sequelize = require('sequelize');
+const dbConfig = require('../config/db.config.js');
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
@@ -19,7 +19,13 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.tutorials = require("./user.model.js")(sequelize, Sequelize);
-db.items = require("./item.model.js")(sequelize, Sequelize);
+db.users = require('./user.model.js')(sequelize, Sequelize);
+db.items = require('./item.model.js')(sequelize, Sequelize);
+
+/* === config association === */
+db.users.hasMany(db.items, { as: 'items' });
+db.items.belongsTo(db.users, {
+  as: 'user',
+});
 
 module.exports = db;
