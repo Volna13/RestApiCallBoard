@@ -7,4 +7,6 @@ const userController = require('../controllers/user.controller');
 /* === Create user. === */
 router.post('/', asyncHandler(userController.createUser));
 
+router.get('/me', asyncHandler(userController.getCurrentUser));
+
 module.exports = router;

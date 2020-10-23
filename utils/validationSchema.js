@@ -7,6 +7,12 @@ const regSchema = joi.object({
   phone: joi.string().min(10).max(13).trim().required(),
 });
 
+const loginSchema = joi.object({
+  email: joi.string().email().lowercase().trim().required(),
+  password: joi.string().min(3).max(30).trim().required(),
+});
+
 module.exports = {
   regSchema,
+  loginSchema,
 };
