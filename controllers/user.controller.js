@@ -5,6 +5,8 @@ const { salt } = require('../config/jwt.config');
 
 const db = require('../models');
 
+const { Op } = db.Sequelize;
+
 const ApplicationError = require('../error/applicationError');
 const NotFoundError = require('../error/notFounterror');
 const UnprocessableEntity = require('../error/unprocessableEntity');
@@ -184,3 +186,49 @@ async function createNewUserData(req, res, next, currentUser, salt) {
   }
   return newUserData;
 }
+
+/* === GET CURRENT USER BY ID === */
+exports.getCurrentUserById = async (req, res) => {
+  const { id } = req.params;
+  const idAuth = req.user.userId;
+  try {
+    const authUser = await User.findByPk(idAuth);
+    if (!authUser) {
+      throw new UnauthorizedError('Unauthorized');
+    } else {
+      const currentUser = await User.findByPk(id);
+      res.status(200).json({
+        id: currentUser.id,
+        phone: currentUser.phone,
+        name: currentUser.name,
+        email: currentUser.email,
+      });
+    }
+  } catch (e) {
+    throw new ApplicationError('Some error occurred while retrieving user', 500);
+  }
+};
+
+/* === SEARCH USERS === */
+exports.getSearchUsers = async (req, res) => {
+  const { name } = req.query;
+  const { email } = req.query;
+
+  let condition = null;
+  if (name && email) {
+    condition = { name: { [Op.like]: `%${name}%` }, email: { [Op.like]: `%${email}%` } };
+  } else if (name) {
+    condition = { name: { [Op.like]: `%${name}%` } };
+  } else if (email) {
+    condition = { email: { [Op.like]: `%${email}%` } };
+  }
+
+  const foundUsers = await User.findAll({ attributes: ['id', 'phone', 'name', 'email'], where: condition });
+  if (foundUsers[0]) {
+    res.status(200).json({
+      foundUsers,
+    });
+  } else {
+    throw new NotFoundError('User not found');
+  }
+};
