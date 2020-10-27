@@ -13,7 +13,7 @@ const UnprocessableEntity = require('../error/unprocessableEntity');
 const UnauthorizedError = require('../error/unauthorizedError');
 
 const User = db.users;
-const { regSchema, loginSchema, putUserSchema } = require('../utils/validationSchema');
+const { regSchema, loginSchema, putUserSchema } = require('../utils/userValidationSchema');
 
 /* === POST NEW USER === */
 // eslint-disable-next-line no-unused-vars
@@ -27,7 +27,6 @@ exports.createUser = async (req, res, next) => {
   }
 
   // CREATE USER MODEL
-  // const salt = bcrypt.genSaltSync(10);
   const user = {
     name: req.body.name,
     email: req.body.email,
@@ -41,11 +40,9 @@ exports.createUser = async (req, res, next) => {
   } else {
     try {
       // save user in DB
-      User.create(user);
+      await User.create(user);
 
-      // This function do not work. She not found user.email in DB!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      await loginUser(req, res, user.email, user.password);
-      // await authUser(req, res, user);
+      await loginUser(req, res, req.body.email, req.body.password);
     } catch (e) {
       throw new ApplicationError('Some error occurred while creating User.', 500);
     }
@@ -63,18 +60,6 @@ exports.loginUser = async (req, res) => {
   }
 
   await loginUser(req, res, req.body.email, req.body.password);
-  // const candidate = await User.findOne({ where: { email: req.body.email } });
-  // if (candidate) {
-  //   // compare Password
-  //   const pwdResult = bcrypt.compareSync(req.body.password, candidate.password);
-  //   if (pwdResult) {
-  //     await authUser(req, res, candidate);
-  //   } else {
-  //     throw new UnprocessableEntity('Password', 'Password do not match');
-  //   }
-  // } else {
-  //   throw new NotFoundError('User not found');
-  // }
 };
 
 async function loginUser(req, res, email, password) {

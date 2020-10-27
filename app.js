@@ -47,11 +47,11 @@ app.use((err, req, res, next) => {
   }
 });
 
-// app.use(function (req, res) {
-//   res.status(404).json({
-//     message: 'error 404',
-//   });
-// });
+app.use(function (req, res) {
+  res.status(404).json({
+    message: 'error 404',
+  });
+});
 
 // sync DB
 db.sequelize.sync();

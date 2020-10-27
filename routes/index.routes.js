@@ -16,6 +16,6 @@ router.post('/', asyncHandler(userController.loginUser));
 
 router.use('/users', usersRouter);
 
-router.use('/post', itemRouter);
+router.use('/items', itemRouter);
 
 module.exports = router;
