@@ -37,7 +37,6 @@ app.use((err, req, res, next) => {
   } else if (err instanceof ApplicationError) {
     console.log('ApplicationError!!');
     res.status(err.getStatus()).json({
-      field: err.getField(),
       message: err.message,
     });
   } else {

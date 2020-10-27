@@ -1,8 +1,8 @@
 const ApplicationError = require('./applicationError');
 
-module.exports = class UnauthorizedError extends ApplicationError {
+module.exports = class Forbidden extends ApplicationError {
   constructor(message) {
     super(message);
-    this.status = 401;
+    this.status = 403;
   }
 };
