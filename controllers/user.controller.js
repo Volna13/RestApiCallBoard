@@ -140,7 +140,7 @@ exports.updateCurrentUser = async (req, res, next) => {
       });
     }
   } catch (e) {
-    throw new ApplicationError('Some error occurred while creating User.', 500);
+    throw new ApplicationError('Some error occurred while updating User.', 500);
   }
 };
 
