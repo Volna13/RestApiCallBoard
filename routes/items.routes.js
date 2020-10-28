@@ -10,9 +10,7 @@ const jwtConfig = require('../config/jwt.config');
 /* === Create user. === */
 router.post('/', jwtConfig.checkAuth, asyncHandler(itemController.createItem));
 
-router.get('/me', jwtConfig.checkAuth, asyncHandler(userController.getCurrentUser));
-
-router.get('/:id', jwtConfig.checkAuth, asyncHandler(userController.getCurrentUserById));
+router.get('/:id', asyncHandler(itemController.getCurrentItemById));
 
 router.get('/', asyncHandler(userController.getSearchUsers));
 

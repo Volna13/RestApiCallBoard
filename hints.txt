@@ -1,1 +1,11 @@
  sudo service mysql stop
+
+ const foundItem = await Item.findAll( {
+       include: [
+         {
+           model: User,
+           as: 'user',
+         },
+       ],
+     });
+ foundItem.forEach((item) => console.log(item.toJSON()));
