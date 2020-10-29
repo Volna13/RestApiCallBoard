@@ -1,4 +1,8 @@
+// const multer = require('multer');
+
 const db = require('../models');
+
+// const { Op } = db.Sequelize;
 
 const ApplicationError = require('../error/applicationError');
 const NotFoundError = require('../error/notFounterror');
@@ -10,6 +14,7 @@ const Item = db.items;
 
 const { itemSchema, putItemSchema } = require('../utils/itemValidationSchema');
 
+// const uploadFile = require('../utils/uploadFile');
 // eslint-disable-next-line no-unused-vars
 exports.createItem = async (req, res, next) => {
   // VALIDATE REQUEST
@@ -25,6 +30,7 @@ exports.createItem = async (req, res, next) => {
     title: req.body.title,
     price: req.body.price,
     userId: req.user.userId,
+    image: '../public/images/noPhoto.jpg',
   };
   try {
     // push item in db
@@ -134,12 +140,15 @@ exports.updateCurrentItem = async (req, res, next) => {
     // CREATE ITEM UPDATE MODEL
     const newItemData = {};
     if (authUserId === currentItem.user.id) {
-      if (req.body.title) {
-        newItemData.title = req.body.title;
-      }
-      if (req.body.price) {
-        newItemData.price = req.body.price;
-      }
+      Object.keys(req.body).forEach((el) => {
+        newItemData[el] = ['price', 'title'].includes(el) ? req.body[el] : null;
+      });
+      // if (req.body.title) {
+      //   newItemData.title = req.body.title;
+      // }
+      // if (req.body.price) {
+      //   newItemData.price = req.body.price;
+      // }
     } else {
       throw new ForbiddenError('');
     }

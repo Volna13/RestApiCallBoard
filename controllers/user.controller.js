@@ -147,15 +147,18 @@ exports.updateCurrentUser = async (req, res, next) => {
 async function createNewUserData(req, res, next, currentUser, salt) {
   // const salt = bcrypt.genSaltSync(10);
   const newUserData = {};
-  if (req.body.name) {
-    newUserData.name = req.body.name;
-  }
-  if (req.body.email) {
-    newUserData.email = req.body.email;
-  }
-  if (req.body.phone) {
-    newUserData.phone = req.body.phone;
-  }
+  Object.keys(req.body).forEach((el) => {
+    newUserData[el] = ['name', 'email', 'phone'].includes(el) ? req.body[el] : null;
+  });
+  // if (req.body.name) {
+  //   newUserData.name = req.body.name;
+  // }
+  // if (req.body.email) {
+  //   newUserData.email = req.body.email;
+  // }
+  // if (req.body.phone) {
+  //   newUserData.phone = req.body.phone;
+  // }
   if (req.body.currentPassword) {
     if (req.body.newPassword) {
       if (bcrypt.compareSync(req.body.currentPassword, currentUser.password)) {

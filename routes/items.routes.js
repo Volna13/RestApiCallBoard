@@ -2,7 +2,7 @@ const express = require('express');
 const asyncHandler = require('express-async-handler');
 
 const router = express.Router();
-const userController = require('../controllers/user.controller');
+
 const itemController = require('../controllers/item.controller');
 
 const jwtConfig = require('../config/jwt.config');
@@ -14,8 +14,12 @@ router.delete('/:id', jwtConfig.checkAuth, asyncHandler(itemController.deleteIte
 
 router.get('/:id', asyncHandler(itemController.getCurrentItemById));
 
-router.get('/', asyncHandler(userController.getSearchItem));
+router.get('/', asyncHandler(itemController.getSearchItem));
 
 router.put('/:id', jwtConfig.checkAuth, asyncHandler(itemController.updateCurrentItem));
+
+router.put('/:id/image', jwtConfig.checkAuth, asyncHandler(itemController.updateCurrentItemImage));
+
+router.delete('/:id/image', jwtConfig.checkAuth, asyncHandler(itemController.deleteCurrentItemImage));
 
 module.exports = router;
