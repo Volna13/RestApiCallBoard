@@ -150,6 +150,7 @@ async function createNewUserData(req, res, next, currentUser, salt) {
   Object.keys(req.body).forEach((el) => {
     newUserData[el] = ['name', 'email', 'phone'].includes(el) ? req.body[el] : null;
   });
+
   // if (req.body.name) {
   //   newUserData.name = req.body.name;
   // }
