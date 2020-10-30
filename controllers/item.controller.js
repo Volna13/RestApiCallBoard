@@ -10,7 +10,8 @@ const UnprocessableEntity = require('../error/unprocessableEntity');
 const ForbiddenError = require('../error/forbiddenError');
 
 const { itemSchema, putItemSchema, searchItemSchema } = require('../utils/itemValidationSchema');
-const uploadFile = require('../utils/uploadFile');
+const uploadFile = require('../utils/uploadFile').uploadFileMiddleware;
+const { FILEPATH } = require('../utils/uploadFile');
 
 const { Op } = db.Sequelize;
 const User = db.users;
@@ -23,7 +24,7 @@ exports.createItem = async (req, res) => {
     title: req.body.title,
     price: req.body.price,
     userId: req.user.userId,
-    image: '/home/sanya_kamputer/WebstormProjects/restApiCallBoard/public/images/noPhoto.jpg',
+    image: `${FILEPATH}noPhoto.jpg`,
   };
 
   try {
@@ -209,10 +210,6 @@ exports.updateCurrentItemImage = async (req, res) => {
   const currentItemId = parseInt(req.params.id, 10);
   const currentItem = await Item.findOne({ where: { id: currentItemId }, include: [{ model: User, as: 'user' }] });
 
-  if (req.file === undefined) {
-    throw new UnprocessableEntity('file', 'Please select a file');
-  }
-
   if (!currentItem) {
     throw new NotFoundError();
   } else if (authUserId === currentItem.user.id) {
@@ -225,13 +222,17 @@ exports.updateCurrentItemImage = async (req, res) => {
 async function createItemImageModel(req, res, currentItemId, currentItem) {
   try {
     await uploadFile(req, res);
-    await Item.update({ image: req.file.path }, { where: { id: currentItemId } });
+    if (req.file === undefined) {
+      throw new UnprocessableEntity('file', 'Please select a file');
+    }
+    console.log(req.file);
+    await Item.update({ image: FILEPATH + req.file.filename }, { where: { id: currentItemId } });
     res.status(200).json({
       id: currentItem.id,
       createdAt: currentItem.createdAt,
       title: currentItem.title,
       price: currentItem.price,
-      image: req.file.path,
+      image: FILEPATH + req.file.filename,
       userId: currentItem.userId,
       user: {
         id: currentItem.user.id,

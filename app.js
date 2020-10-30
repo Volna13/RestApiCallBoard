@@ -21,21 +21,15 @@ app.use('/api', indexRouter);
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  console.error(err);
   if (err instanceof UnprocessableEntityError) {
-    console.log('UnprocessableEntityError!!');
     res.status(err.getStatus()).json({
       field: err.getField(),
       message: err.message,
     });
   } else if (err instanceof ApplicationError) {
-    console.log('ApplicationError!!');
     res.status(err.getStatus()).send();
   } else {
-    console.log('else error 500!!', err);
-    res.status(500).json({
-      errorMsg: `${err.message}fdfd`,
-    });
+    res.status(500).send();
   }
 });
 

@@ -138,12 +138,14 @@ async function validateUpdateUser(req) {
 async function createNewUserData(req, res, next, currentUser, salt) {
   const newUserData = {};
   Object.keys(req.body).forEach((el) => {
-    newUserData[el] = ['name', 'email', 'phone'].includes(el) ? req.body[el] : null;
+    newUserData[el] = ['name', 'email', 'phone', 'currentPassword', 'newPassword'].includes(el) ? req.body[el] : null;
   });
-  if (bcrypt.compareSync(req.body.currentPassword, currentUser.password)) {
-    newUserData.newPassword = bcrypt.hashSync(req.body.newPassword, salt);
-  } else {
-    throw new UnprocessableEntity('Current Password', 'Password do not match');
+  if (newUserData.currentPassword || newUserData.currentPassword) {
+    if (bcrypt.compareSync(req.body.currentPassword, currentUser.password)) {
+      newUserData.newPassword = bcrypt.hashSync(req.body.newPassword, salt);
+    } else {
+      throw new UnprocessableEntity('Current Password', 'Password do not match');
+    }
   }
   return newUserData;
 }

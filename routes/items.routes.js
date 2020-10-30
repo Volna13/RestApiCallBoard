@@ -17,7 +17,7 @@ router.get('/', asyncHandler(itemController.getSearchItem));
 
 router.put('/:id', jwtConfig.checkAuth, asyncHandler(itemController.updateCurrentItem));
 
-router.put('/:id/image', jwtConfig.checkAuth, asyncHandler(itemController.updateCurrentItemImage));
+router.post('/:id/image', jwtConfig.checkAuth, asyncHandler(itemController.updateCurrentItemImage));
 
 router.delete('/:id/image', jwtConfig.checkAuth, asyncHandler(itemController.deleteCurrentItemImage));
 
