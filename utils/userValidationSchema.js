@@ -13,13 +13,15 @@ const loginSchema = joi.object({
   password: joi.string().min(3).max(30).trim().required(),
 });
 
-const putUserSchema = joi.object({
-  name: joi.string().trim(),
-  email: joi.string().email().lowercase().trim(),
-  currentPassword: joi.string().max(30),
-  newPassword: joi.string().min(3).max(30),
-  phone: joi.string().min(10).max(13).trim(),
-});
+const putUserSchema = joi
+  .object({
+    name: joi.string().trim(),
+    email: joi.string().email().lowercase().trim(),
+    currentPassword: joi.string().max(30).empty(''),
+    newPassword: joi.string().min(3).max(30),
+    phone: joi.string().min(10).max(13).trim(),
+  })
+  .with('currentPassword', ['newPassword']);
 
 module.exports = {
   regSchema,

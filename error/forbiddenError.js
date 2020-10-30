@@ -1,8 +1,12 @@
 const ApplicationError = require('./applicationError');
 
 module.exports = class Forbidden extends ApplicationError {
-  constructor(message) {
-    super(message);
+  constructor() {
+    super();
     this.status = 403;
+  }
+
+  getStatus() {
+    return this.status;
   }
 };

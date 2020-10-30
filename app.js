@@ -1,7 +1,5 @@
 const express = require('express');
 const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
 
 const db = require('./models');
 
@@ -12,11 +10,8 @@ const UnprocessableEntityError = require('./error/unprocessableEntity');
 
 const app = express();
 
-app.use(logger('dev'));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/', (req, res) => {
@@ -24,7 +19,6 @@ app.post('/', (req, res) => {
 });
 app.use('/api', indexRouter);
 
-/* === ERROR handler === */
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   console.error(err);
@@ -36,13 +30,11 @@ app.use((err, req, res, next) => {
     });
   } else if (err instanceof ApplicationError) {
     console.log('ApplicationError!!');
-    res.status(err.getStatus()).json({
-      message: err.message,
-    });
+    res.status(err.getStatus()).send();
   } else {
     console.log('else error 500!!', err);
     res.status(500).json({
-      errorMsg: err.message,
+      errorMsg: `${err.message}fdfd`,
     });
   }
 });
@@ -53,7 +45,6 @@ app.use(function (req, res) {
   });
 });
 
-// sync DB
 db.sequelize.sync();
 
 module.exports = app;

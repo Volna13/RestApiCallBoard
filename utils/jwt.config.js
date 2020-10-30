@@ -10,22 +10,19 @@ module.exports = {
   salt,
   JWT_SECRET,
   checkAuth: (req, res, next) => {
-    // const header = req.headers['authorization'];
     const header = req.headers.authorization;
 
     if (typeof header !== 'undefined') {
       jwt.verify(header, JWT_SECRET, (err, decodedToken) => {
         if (err) {
-          throw new UnauthorizedError('Unauthorized');
+          throw new UnauthorizedError();
         } else {
-          // If token is successfully verified, we can send the authorized data
           req.user = decodedToken;
           next();
         }
       });
     } else {
-      // If header is undefined return Forbidden (403)
-      throw new ForbiddenError('header is undefined');
+      throw new ForbiddenError();
     }
   },
 };

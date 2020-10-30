@@ -5,9 +5,8 @@ const router = express.Router();
 
 const itemController = require('../controllers/item.controller');
 
-const jwtConfig = require('../config/jwt.config');
+const jwtConfig = require('../utils/jwt.config');
 
-/* === Create user. === */
 router.post('/', jwtConfig.checkAuth, asyncHandler(itemController.createItem));
 
 router.delete('/:id', jwtConfig.checkAuth, asyncHandler(itemController.deleteItem));

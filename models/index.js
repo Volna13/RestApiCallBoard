@@ -22,7 +22,6 @@ db.sequelize = sequelize;
 db.users = require('./user.model.js')(sequelize, Sequelize);
 db.items = require('./item.model.js')(sequelize, Sequelize);
 
-/* === config association === */
 db.users.hasMany(db.items, { as: 'items' });
 db.items.belongsTo(db.users, {
   as: 'user',
