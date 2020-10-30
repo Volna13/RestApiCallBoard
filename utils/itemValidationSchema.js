@@ -10,7 +10,15 @@ const putItemSchema = joi.object({
   price: joi.number().positive().precision(2),
 });
 
+const searchItemSchema = joi.object({
+  title: joi.string(),
+  userId: joi.number(),
+  orderBy: joi.string().valid('price', 'createdAt').empty('').default('createAt'),
+  orderType: joi.string().valid('asc', 'desc').empty('').default('desc'),
+});
+
 module.exports = {
   itemSchema,
   putItemSchema,
+  searchItemSchema,
 };

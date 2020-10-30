@@ -11,7 +11,7 @@ const NotFoundError = require('../error/notFounterror');
 const UnprocessableEntity = require('../error/unprocessableEntity');
 const ForbiddenError = require('../error/forbiddenError');
 
-const { itemSchema, putItemSchema } = require('../utils/itemValidationSchema');
+const { itemSchema, putItemSchema, searchItemSchema } = require('../utils/itemValidationSchema');
 const uploadFile = require('../utils/uploadFile');
 
 const { Op } = db.Sequelize;
@@ -107,16 +107,24 @@ exports.getCurrentItemById = async (req, res) => {
       throw new NotFoundError('Item not found');
     }
   } catch (e) {
-    console.log(e);
     throw new ApplicationError('Some error occurred while retrieving item', 500);
   }
 };
 
-// not work.
 /* === SEARCH ITEM === */
 exports.getSearchItem = async (req, res) => {
+  // VALIDATE REQUEST
+  try {
+    await searchItemSchema.validateAsync(req.query);
+  } catch (e) {
+    const field = e.details[0].context.label;
+    throw new UnprocessableEntity(field, e);
+  }
+
   const { title } = req.query;
   const { userId } = req.query;
+  const orderBy = req.query.orderBy ? req.query.orderBy : 'createdAt';
+  const orderType = req.query.orderType ? req.query.orderType : 'DESC';
 
   let condition = null;
   if (title && userId) {
@@ -127,13 +135,19 @@ exports.getSearchItem = async (req, res) => {
     condition = { userId };
   }
 
-  const foundUsers = await User.findAll({ attributes: ['id', 'phone', 'name', 'email'], where: condition });
-  if (foundUsers[0]) {
+  const foundItems = await Item.findAll({
+    attributes: ['id', 'createdAt', 'title', 'price', 'image'],
+    where: condition,
+    include: [{ model: User, as: 'user', attributes: ['id', 'phone', 'name', 'email'] }],
+    order: [[orderBy, orderType]],
+  });
+
+  if (foundItems[0]) {
     res.status(200).json({
-      foundUsers,
+      foundItems,
     });
   } else {
-    throw new NotFoundError('User not found');
+    throw new NotFoundError('Items not found');
   }
 };
 
@@ -273,6 +287,6 @@ exports.deleteCurrentItemImage = async (req, res) => {
       throw new ForbiddenError();
     }
   } else {
-    throw new NotFoundError('Item not found');
+    throw new NotFoundError('Image not found');
   }
 };
