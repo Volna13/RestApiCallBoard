@@ -286,3 +286,23 @@ exports.deleteCurrentItemImage = async (req, res) => {
     throw new NotFoundError();
   }
 };
+
+exports.deleteItemWithSavingImage = async (req, res) => {
+  const authUserId = req.user.userId;
+  const oldItemId = parseInt(req.params.idOld, 10);
+  const newItemId = parseInt(req.params.idNew, 10);
+  const oldItem = await Item.findOne({ where: { id: oldItemId }, include: [{ model: User, as: 'user' }] });
+  const newItem = await Item.findOne({ where: { id: newItemId }, include: [{ model: User, as: 'user' }] });
+
+  if (!oldItem || !newItem || oldItem.image === null) {
+    throw new NotFoundError();
+  }
+
+  if (oldItem.userId === authUserId && newItem.userId === authUserId) {
+    await Item.update({ image: oldItem.image }, { where: { id: newItemId } });
+    await oldItem.destroy();
+    res.status(200).send();
+  } else {
+    throw new ForbiddenError();
+  }
+};

@@ -21,4 +21,10 @@ router.post('/:id/image', jwtConfig.checkAuth, asyncHandler(itemController.updat
 
 router.delete('/:id/image', jwtConfig.checkAuth, asyncHandler(itemController.deleteCurrentItemImage));
 
+router.delete(
+  '/deleteWithSaveImg/:idOld/:idNew',
+  jwtConfig.checkAuth,
+  asyncHandler(itemController.deleteItemWithSavingImage),
+);
+
 module.exports = router;
