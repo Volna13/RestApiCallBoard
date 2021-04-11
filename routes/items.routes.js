@@ -11,6 +11,8 @@ router.post('/', jwtConfig.checkAuth, asyncHandler(itemController.createItem));
 
 router.delete('/:id', jwtConfig.checkAuth, asyncHandler(itemController.deleteItem));
 
+router.get('/itemsWithoutImageCountReport', asyncHandler(itemController.getItemsWithoutImageCountReport));
+
 router.get('/:id', asyncHandler(itemController.getCurrentItemById));
 
 router.get('/', asyncHandler(itemController.getSearchItem));

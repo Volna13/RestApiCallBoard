@@ -104,6 +104,11 @@ exports.getCurrentItemById = async (req, res) => {
   }
 };
 
+exports.getItemsWithoutImageCountReport = async (req, res) => {
+  const countItems = await Item.count({ where: { image: '/public/images/noPhoto.jpg' } });
+  res.status(200).json({ countItems });
+};
+
 exports.getSearchItem = async (req, res) => {
   await validateGetSearchItem(req);
 
