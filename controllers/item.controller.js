@@ -306,3 +306,22 @@ exports.deleteItemWithSavingImage = async (req, res) => {
     throw new ForbiddenError();
   }
 };
+
+exports.bulkDelete = async (req, res) => {
+  console.log(req.query);
+
+  const authUserId = req.user.userId;
+  const { item } = req.query;
+  console.log(item);
+  await Item.destroy({
+    where: { id: { [Op.in]: item }, userId: authUserId },
+  });
+
+  // items.map((item) => {
+  //   if (item.userId === authUserId) {
+  //     return item.destroy();
+  //   }
+  //   throw new ForbiddenError();
+  // });
+  res.status(200).send();
+};

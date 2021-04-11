@@ -27,4 +27,6 @@ router.delete(
   asyncHandler(itemController.deleteItemWithSavingImage),
 );
 
+router.delete('/bulkDelete/:item', jwtConfig.checkAuth, asyncHandler(itemController.bulkDelete));
+
 module.exports = router;
